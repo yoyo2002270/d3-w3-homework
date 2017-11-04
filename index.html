@@ -1,0 +1,198 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>week3-homework-daisy chang</title>
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0">
+	</head>
+    <body>
+        <div>把數字小於60改紅色</div>
+        <div>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+        </div> 
+    
+    <script>
+     var arr = [44, 98, 11, 88, 43, 20];
+        
+        bind(arr);
+        render();
+        
+        //傳入資料
+        
+        function bind(dataSet){
+            var body = d3.select("body");
+            var selection = 
+                body.selectAll("p").data(dataSet);
+            
+                selection.enter().append("p");
+                selection.exit().remove();
+                
+
+        }
+        
+        function render(){
+            d3.selectAll("p").text(function(aa,bb){
+                return(bb+1)+":"+aa;}).style({
+                "color":function(aa){
+                    if(aa<60){
+                        return "red"
+                    }else{
+                        return"#4400CC"
+                    }
+                }
+            });
+        }
+    </script> 
+
+     <h3 id="party3" color="black"  >政黨顏色</h3>
+    <select onchange="showColor(this.value)">
+        <option value="國民黨">國民黨</option>
+        <option value="民進黨">民進黨</option>
+        <option value="親民黨">親民黨</option>
+        <option value="時代力量">時代力量</option>
+        
+        
+        <script>
+        var index = ["國民黨", "民進黨", "親民黨", "時代力量"];
+        var color = ["blue", "green", "orange", "yellow"];
+        var partycolor = d3.scale.ordinal()
+                            .domain(index)
+                            .range(color);
+        
+        function showColor(value) {
+            d3.select("#party3").style({color:partycolor(value)});
+        }
+        
+        
+        </script>
+   
+   <br>
+      <input type="button" value="新增" onclick="update()" style="position:relative; left:250px; top:150px; font-size: 50px;">
+        <input type="button" value="刪除" onclick="kickItem()" style="position:relative; left:300px; top:150px; font-size: 50px;">
+    
+    <div id="haha"></div>
+    
+     <script>
+        
+        
+     //button 結束   
+        
+        var arr2 = [98, 60, 66, 38, 71, 21];
+        var w=900, h=600,p=100;
+        /*svg->bind-> render 順序不能變*/
+        svg();
+        bind(arr2);
+        render();
+        
+        function svg(){
+            d3.select("#haha").append("svg")
+                .attr({
+                "id":"barchart",
+                "width":w,
+                "height":h
+                
+            });
+        }
+        
+        /*傳入資料*/
+        
+        function bind(arr2){
+             var svg = d3.select("#barchart");
+             var selection = svg.selectAll("rect")
+                                .data(arr2);
+            
+    
+        selection.enter().append("rect");
+        selection.exit().remove();
+            
+            
+        var selection_t = svg.selectAll("text").data(arr2);  
+            
+        selection_t.enter().append("text");
+        selection_t.exit().remove(); 
+        }  
+        
+         /*製作資料畫布*/
+        
+        function render(){
+            
+            //定義比例尺
+            var yScale = d3.scale.linear()
+                            .domain([100,1000])
+                            .range([100,1000]);
+            
+            
+            
+             d3.selectAll("#barchart rect").attr({
+                 y:function(d){
+                    return h-yScale(d)-p
+                 },
+                 x:function(d,i){
+                     return p+43*i;
+                 },
+                 width:40,
+                 height:function(d){
+                 return yScale(d);
+             },
+                fill:function(d){
+                    if(d<70){
+                        return "red"
+                    }else{
+                        return "lightgreen"
+                    }
+                } 
+             })
+            
+            
+            
+        //文字
+         d3.selectAll("#barchart text").attr({
+                 y:function(d){
+                    return h-p+20
+                 },
+                 x:function(d,i){
+                     return p+43*i+20;
+                 },
+                "text-anchor":"middle"
+             }).text(function(d){
+             return d;
+         })
+        
+            
+            
+        }
+        
+        
+         //round 四捨五入的意思,rscale是比例尺變數
+        function random(m, n) {
+            return Math.floor(Math.random() * (m - n + 1) + n);
+    }
+    function update(){
+        var num = random(10,100);
+        arr2.push(num);
+        bind(arr2);
+        render();
+        
+    }    
+    function kickItem(){
+        var num = random(10,100);
+        arr2.shift(num);
+        bind(arr2);
+        render();
+        
+    }        
+
+        
+        
+    </script>
+      
+
+	</body>
+</html>
